@@ -8,6 +8,7 @@ interface OptimizationSectionProps {
 }
 
 // Internal Component for the Resume Template
+// This intentionally does NOT use dark mode classes because it represents paper/document
 const ResumeTemplate: React.FC<{ data: CVStructuredData }> = ({ data }) => {
   return (
     <div className="w-full bg-white text-slate-900 font-sans" id="cv-template">
@@ -170,9 +171,7 @@ export const OptimizationSection: React.FC<OptimizationSectionProps> = ({ optimi
     window.print();
   };
 
-  // Keep download txt for fallback, though Print to PDF is preferred now
   const handleDownloadTxt = () => {
-    // Generate a simple text representation from the structured data
     const d = optimizedData.structuredContent;
     let text = `${d.fullName}\n${d.title}\n\n`;
     text += `Email: ${d.contact.email} | Tel: ${d.contact.phone} | Loc: ${d.contact.location}\n\n`;
@@ -183,7 +182,6 @@ export const OptimizationSection: React.FC<OptimizationSectionProps> = ({ optimi
       exp.achievements.forEach(a => text += `- ${a}\n`);
       text += `\n`;
     });
-    // ... Simplified text version
     
     const element = document.createElement("a");
     const file = new Blob([text], {type: 'text/plain'});
@@ -196,14 +194,14 @@ export const OptimizationSection: React.FC<OptimizationSectionProps> = ({ optimi
   return (
     <div className="w-full max-w-5xl mx-auto pb-12 animate-fade-in">
       
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8 text-center no-print">
+      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8 text-center no-print transition-colors">
         <div className="flex justify-center mb-3">
-          <div className="bg-green-100 p-3 rounded-full">
-            <CheckCircle className="text-green-600" size={32} />
+          <div className="bg-green-100 dark:bg-green-900/40 p-3 rounded-full">
+            <CheckCircle className="text-green-600 dark:text-green-400" size={32} />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-green-800">¡Tu CV ha sido optimizado!</h2>
-        <p className="text-green-700 mt-2 max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold text-green-800 dark:text-green-400">¡Tu CV ha sido optimizado!</h2>
+        <p className="text-green-700 dark:text-green-300 mt-2 max-w-2xl mx-auto">
           Hemos rediseñado tu currículum utilizando una estructura probada para sistemas ATS. 
           El formato es limpio, profesional y jerarquizado para maximizar la legibilidad.
         </p>
@@ -211,11 +209,11 @@ export const OptimizationSection: React.FC<OptimizationSectionProps> = ({ optimi
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6 no-print">
-        <h3 className="text-xl font-bold text-slate-800">Vista Previa del Documento</h3>
+        <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Vista Previa del Documento</h3>
         <div className="flex gap-3">
           <button 
             onClick={handleDownloadTxt}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
           >
             <Download size={18} />
             <span className="hidden sm:inline">Descargar Texto</span>
@@ -231,13 +229,13 @@ export const OptimizationSection: React.FC<OptimizationSectionProps> = ({ optimi
       </div>
 
       {/* Document Preview Container */}
-      <div className="bg-slate-200 p-4 md:p-8 rounded-lg overflow-x-auto no-print flex justify-center">
+      <div className="bg-slate-200 dark:bg-slate-800 p-4 md:p-8 rounded-lg overflow-x-auto no-print flex justify-center transition-colors">
         <div className="bg-white shadow-2xl w-[210mm] min-h-[297mm] p-[15mm] md:p-[20mm] origin-top scale-100 md:scale-95 lg:scale-100 shrink-0">
           <ResumeTemplate data={optimizedData.structuredContent} />
         </div>
       </div>
 
-      {/* Print Only Section - This forces the print dialog to only see the resume */}
+      {/* Print Only Section */}
       <div className="hidden print-only">
         <div className="w-[100%] h-[100%] p-[10mm] bg-white text-black">
           <ResumeTemplate data={optimizedData.structuredContent} />
@@ -247,7 +245,7 @@ export const OptimizationSection: React.FC<OptimizationSectionProps> = ({ optimi
       <div className="mt-12 text-center no-print">
         <button 
           onClick={onRestart}
-          className="text-slate-500 hover:text-slate-800 font-medium underline transition-colors"
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium underline transition-colors"
         >
           Comenzar nuevo análisis
         </button>
